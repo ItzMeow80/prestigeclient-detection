@@ -1,0 +1,88 @@
+title: Prestige Cheat Loader / Injection
+id: 9f4c1a20-7e31-4b88-9c2d-5a0e6f1b3d77
+status: experimental
+description: |
+  Detects the Prestige cheat loader and its manual-map injection into Minecraft.
+  Authors: MEOW & KHATOXD
+  Reference: PRESTIGE-CLIENT-2026 (validated 2026-10-21)
+references:
+  - https://prestigeclient.vip
+author: MEOW & KHATOXD
+date: 2026/10/21
+modified: 2026/10/21
+tags:
+  - attack.execution
+  - attack.t1055
+  - cheat.prestige
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith:
+        - '\Prestige Launcher.exe'
+        - '\PrestigeLauncher.exe'
+  selection_img_pe:
+    - OriginalFileName: 'Prestige Launcher.exe'
+    - Description: 'Prestige Launcher'
+    - Product: 'Prestige Launcher'
+  selection_cmd:
+    CommandLine|contains:
+      - 'Prestige Launcher.exe'
+      - 'PrestigeLauncher.exe'
+      - 'launcherDownload'
+  condition: 1 of selection_*
+falsepositives:
+  - None known. FP-tested against 694 clean System32 binaries.
+level: high
+---
+id: 3b7e9d14-2f60-4a5c-8e19-7c4d2a8f6b03
+title: Prestige Backend Download
+status: experimental
+description: |
+  WinHTTP POST to the Prestige download endpoint with no user-agent.
+  Authors: MEOW & KHATOXD
+references:
+  - https://prestigeclient.vip
+author: MEOW & KHATOXD
+date: 2026/10/21
+tags:
+  - attack.command_and_control
+  - cheat.prestige
+logsource:
+  category: proxy
+  product: windows
+detection:
+  selection:
+    cs-method: 'POST'
+    cs-uri-stem|contains: '/launcherDownload'
+  filter_ua:
+    cs-user-agent|contains: null
+  condition: selection
+falsepositives:
+  - Unlikely. The empty user-agent on this endpoint is distinctive.
+level: high
+---
+id: c82a5f79-4d13-4e6b-b07a-9e15c3d8a246
+title: Prestige File Artifacts
+status: experimental
+description: |
+  On-disk artifacts written by the Prestige launcher.
+  Authors: MEOW & KHATOXD
+author: MEOW & KHATOXD
+date: 2026/10/21
+tags:
+  - cheat.prestige
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|contains:
+      - '\Prestige\changelogs_cache.json'
+      - '\Downloads\Prestige Launcher.exe'
+      - 'prestigeclient.vip'
+  condition: selection
+falsepositives:
+  - None known.
+level: medium
