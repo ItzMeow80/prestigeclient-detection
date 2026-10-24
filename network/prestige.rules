@@ -1,0 +1,35 @@
+# Prestige network detection rules (Suricata / Snort syntax)
+# Authors: MEOW & KHATOXD
+# Reference: PRESTIGE-CLIENT-2026
+# Validated 2026-10-21 against live traffic captured from the real launcher.
+#
+# Note: traffic is TLS (port 443). These match on SNI / DNS layer.
+# For full URL matching you need SSL inspection or DNS logs.
+
+# --- DNS: the backend domains ---
+alert dns any any -> any any (msg:"DNS Prestige backend domain"; \
+  dns.query; content:"prestigeclient.vip"; \
+  reference:url,prestigeclient.vip; \
+  classtype:trojan-activity; sid:9000001; rev:1;)
+
+alert dns any any -> any any (msg:"DNS Prestige API host"; \
+  dns.query; content:"api.prestigeclient.vip"; \
+  classtype:trojan-activity; sid:9000002; rev:1;)
+
+# --- TLS SNI (when DNS is DoH / not visible) ---
+alert tls any any -> any any (msg:"TLS SNI Prestige backend"; \
+  tls.sni; content:"prestigeclient.vip"; nocase; \
+  classtype:trojan-activity; sid:9000003; rev:1;)
+
+# --- HTTP cleartext fallback (if they ever drop TLS) ---
+alert http any any -> any any (msg:"HTTP Prestige launcherDownload endpoint"; \
+  http.uri; content:"/launcherDownload"; \
+  http.host; content:"prestigeclient.vip"; \
+  classtype:trojan-activity; sid:9000004; rev:1;)
+
+# --- JA3 placeholder: fill in after capturing the real fingerprint ---
+# The launcher uses WinHTTP defaults. Capture JA3/JA3S from your TLS logs and
+# add it here - it is stable across rebuilds and survives domain changes.
+# alert tls any any -> any any (msg:"TLS JA3 Prestige launcher"; \
+#   ja3.hash; content:"<FILL_AFTER_CAPTURE>"; \
+#   classtype:trojan-activity; sid:9000005; rev:1;)
