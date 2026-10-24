@@ -90,4 +90,11 @@ read `report.md` section 11 prima di agire su un alert.
 
 [![YARA](https://img.shields.io/badge/YARA-FF6B35?style=for-the-badge&logo=virustotal&logoColor=white)](https://virustotal.github.io/yara/)
 [![Sigma](https://img.shields.io/badge/Sigma-6A4C93?style=for-the-badge&logo=sigma&logoColor=white)](https://sigmahq.io/)
-[![Suricata](https://img.shields.io/badge/Suricata-1B8
+[![Suricata](https://img.shields.io/badge/Suricata-1B82E6?style=for-the-badge&logoColor=white)](https://suricata.io/)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://learn.microsoft.com/en-us/powershell/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-62B47A?style=for-the-badge&logo=minecraft&logoColor=white)](https://www.minecraft.net/)
+
+---
+
+**Made by MEOW & KHATOXD** · Signature ID `PRESTIGE-CLIENT-2026` · Validated 2026-10-21 against two real samples
