@@ -1,0 +1,152 @@
+{
+  "signature_id": "PRESTIGE-CLIENT-2026",
+  "family": "Prestige Client / Prestige Injection (Minecraft cheat + manual-map injector)",
+  "severity": "high",
+  "categories": ["cheat", "injector", "manual-map", "vmprotect", "self-destruct"],
+  "confidence": "high",
+  "collected": "2026-10-21",
+  "validated": "2026-10-21 against real samples (full static extraction: strings, imports, resources, signature, section hashes)",
+  "collector": "static analysis + live download interception (winhttp proxy)",
+
+  "hashes": {
+    "launcher_exe": {
+      "sha256": "D7508C0022D959E4566D2CC1742CC0B7752B6FD1E692ECAB7CEF7AC6B9D8EEC3",
+      "md5": "A802560CC00C14F811F003991A717E8C",
+      "size": 237848,
+      "note": "Prestige Launcher v1.2.3.0"
+    },
+    "module_dll": {
+      "sha256": "A649B9304DD74EB38178AD99D193FC2458D4F96FC95E8C4590EFF630561C701F",
+      "md5": "BDC3B52BFC6D0BCFE75065357357EAA4",
+      "size": 4932864,
+      "note": "payload downloaded from /launcherDownload on 2026-10-21. hash changes per build: high-confidence hit, NOT the only rule."
+    }
+  },
+
+  "code_signature": {
+    "status": "Valid",
+    "subject": "CN=Prestige Software Development, O=Prestige Software Development, S=Limburg, C=NL",
+    "issuer": "CN=Sectigo Public Code Signing CA R36, O=Sectigo Limited, C=GB",
+    "serial_number": "64B9692518A71E22975BCB85520F1F20",
+    "thumbprint": "32318E2970BE53AA2A5B86609A680A6C6AD6A39D",
+    "not_before": "2026-08-18",
+    "not_after": "2027-08-19",
+    "timestamp_authority": "CN=Sectigo Public Time Stamping Signer R37, O=Sectigo Limited, C=GB",
+    "note": "VERY useful IOC: the serial/thumbprint survive a rebuild because the seller reuses the cert until it expires. Treat a valid signature from this subject as malicious, not benign."
+  },
+
+  "pe_characteristics": {
+    "launcher": {
+      "machine": "x64",
+      "timeDateStamp": "0x6A9F981C",
+      "imageBase": "0x140000000",
+      "addressOfEntryPoint": "0x2060",
+      "sizeOfImage": "0x3D000",
+      "dllCharacteristics": "0xC160",
+      "subsystem": "Windows GUI",
+      "sections": [
+        { "name": ".text",   "va": "0x1000", "md5": "190d5fcd0ca72b8fca3e75c409fcd9e6" },
+        { "name": ".rdata",  "va": "0x15000", "md5": "f5da26edf005550762ad605d158d539d" },
+        { "name": ".data",   "va": "0x21000", "md5": "e1931eb2195cbf86072f02b92c453900" },
+        { "name": ".pdata",  "va": "0x23000", "md5": "3599e13b854fb904c209b923e011b1bd" },
+        { "name": ".fptable","va": "0x25000", "md5": "bf619eac0cdf3f68d496ea9344137e8b" },
+        { "name": ".rsrc",   "va": "0x26000", "md5": "6f38ce8aa3e33d5136b09cf87cbf9ee0" },
+        { "name": ".reloc",  "va": "0x3C000", "md5": "8977e9842ad7248198257e57e00701d3" }
+      ],
+      "imports": ["WINHTTP.dll", "USER32.dll", "KERNEL32.dll"],
+      "import_detail": {
+        "WINHTTP.dll": ["WinHttpOpen", "WinHttpConnect", "WinHttpOpenRequest", "WinHttpSendRequest", "WinHttpReceiveResponse", "WinHttpReadData", "WinHttpQueryDataAvailable", "WinHttpQueryHeaders", "WinHttpSetOption", "WinHttpCloseHandle"],
+        "KERNEL32.dll": ["VirtualAlloc", "VirtualProtect", "LoadLibraryA", "LoadLibraryExW", "IsDebuggerPresent", "RtlPcToFileHeader"]
+      },
+      "packer": "NOT packed - plain .text/.rdata/.data/.pdata/.fptable/.rsrc/.reloc",
+      "rich_header": "eddb922ca9bafc7fa9bafc7fa9bafc7fd03bf97e27bafc7fd03bf87ea5bafc7fd03bff7ea1bafc7f2e33ff7ea0bafc7f2e33f87eb9bafc7fd03bfd7eaebafc7fa9bafd7fc2bafc7f2e33f97e82bafc7f2e33f97ea8bafc7f3533f97ea8bafc7f3533037fa8bafc7f3533fe7ea8bafc7f52696368a9bafc7f",
+      "note": "Rich header + section MD5s are stable per-build and survive file renaming/rewrapping."
+    },
+    "module": {
+      "timeDateStamp": "0x6A93F13B",
+      "imageBase": "0x180000000",
+      "addressOfEntryPoint": "0x14756C",
+      "sizeOfImage": "0x4BC000",
+      "sections": [".text", ".rdata", ".data", ".pdata", ".rsrc", ".reloc", ".vm_sec", ".vlizer"],
+      "packer": "VMProtect (.vm_sec + .vlizer), both sections present = strong indicator"
+    }
+  },
+
+  "version_resource": {
+    "CompanyName": "Prestige Software Development",
+    "FileDescription": "Prestige Launcher",
+    "FileVersion": "1.2.3.0",
+    "InternalName": "PrestigeLauncher",
+    "LegalCopyright": "Copyright (C) 2026 Prestige Software Development. All rights reserved.",
+    "OriginalFilename": "Prestige Launcher.exe",
+    "ProductName": "Prestige Launcher",
+    "ProductVersion": "1.2.3.0",
+    "translation": "040904b0 (en-US)",
+    "note": "OriginalFilename / InternalName survive a file rename and are read by most EDRs."
+  },
+
+  "manifest": {
+    "assemblyIdentity": "name=\"Prestige Launcher\" version=\"1.2.3.0\" processorArchitecture=\"amd64\"",
+    "requestedExecutionLevel": "asInvoker",
+    "dpiAware": "true",
+    "supportedOS": "Windows 10/11 {8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}",
+    "note": "the assemblyIdentity string is embedded in the RT_MANIFEST resource - independent of the string table."
+  },
+
+  "network": {
+    "host": "api.prestigeclient.vip",
+    "endpoint": "/launcherDownload",
+    "method": "POST",
+    "port": 443,
+    "storage": "UTF-16 in the binary (WinHTTP config is wchar_t) - ASCII-only scans miss this",
+    "tls": "WinHTTP, no user-agent (WINHTTP_NO_USER_AGENT_HEADER)",
+    "user_agent": null,
+    "web": ["prestigeclient.vip", "www.prestigeclient.vip"],
+    "note": "the POST with no user-agent from WinHTTP is distinctive; curl/requests are blocked by Cloudflare."
+  },
+
+  "files": [
+    "%APPDATA%\\Prestige\\changelogs_cache.json",
+    "%USERPROFILE%\\Downloads\\Prestige Launcher.exe"
+  ],
+
+  "pdb_paths": [
+    "Prestige-Injection\\Dependencies\\cryptopp",
+    "C:\\Users\\Admin\\source\\repos\\Prestige-Injection"
+  ],
+
+  "launcher_error_strings": [
+    "Download corrupted (truncated).",
+    "Download corrupted (bad MZ).",
+    "Download corrupted (bad PE offset).",
+    "Download corrupted (bad PE signature).",
+    "Download corrupted (not a 64-bit DLL).",
+    "Missing dependency for the Prestige module: %s (error %lu).",
+    "Unresolved import in the Prestige module.",
+    "The Prestige module refused to initialize.",
+    "The Prestige module is missing its entry point.",
+    "The Prestige module reported an initialization failure.",
+    "Could not download Prestige.",
+    "Your antivirus is blocking requests to the Prestige API.",
+    "Your internet provider is blocking requests to the Prestige API."
+  ],
+
+  "self_destruct_strings": [
+    "wiping the last traces",
+    "no Prestige memory remains",
+    "module-manager-clean",
+    "module-shutdown",
+    "waiting for Prestige to unload"
+  ],
+
+  "yara_rules": ["Prestige_Launcher_OnDisk", "Prestige_Client_Module_OnDisk", "Prestige_VMProtect_Section_Heuristic", "Prestige_Module_InMemory", "Prestige_Launcher_InMemory", "Prestige_SelfDestruct_Residue", "Prestige_ManualMap_PE_In_PrivMem"],
+
+  "validation": {
+    "true_positive": "both real samples fire their respective rules",
+    "cross_contamination": "none (each rule rejects the other sample)",
+    "false_positive": "0 hits across 694 clean System32 binaries (1388 evaluations), 2026-10-21",
+    "harness": "validate.ps1"
+  },
+
+  "limitations": "hashes and host change on every rebuild/rebrand. cert serial/thumbprint, PDB paths and VMProtect sections are the most stable anchors. self-destruct is temporal and cannot be caught by a single static scan. see behavioral.md for runtime indicators."
+}
