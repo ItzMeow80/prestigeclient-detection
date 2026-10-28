@@ -4,6 +4,9 @@
 
 ---
 
+> [!CAUTION]
+> Older indicator sets are deprecated - use the **v1.0.0** release of this repository.
+
 ### `about`
 
 ```
