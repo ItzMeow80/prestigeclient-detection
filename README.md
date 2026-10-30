@@ -15,7 +15,7 @@ $ ./prestige-detection --info
 
 ```
 Signature :  PRESTIGE-CLIENT-2026
-Authors   :  MEOW & KHATOXD
+Authors   :  MEOW & KhatooXD
 Target    :  Prestige Client / Prestige Injection (Minecraft cheat)
 Type      :  Signed loader + VMProtect payload, manual-map into javaw.exe
 Vectors   :  Disk · Memory · Process · Network
